@@ -1,0 +1,136 @@
+
+<style>
+  #radar-wrap { background: #1a0a14; border-radius: 16px; padding: 32px 24px 24px; font-family: var(--font-sans); }
+  .legend-row { display: flex; align-items: center; gap: 8px; font-size: 12px; }
+  .legend-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+</style>
+<div id="radar-wrap">
+  <svg width="100%" viewBox="0 0 560 520" role="img" aria-label="Risk radar chart showing 6 items across Low and Medium risk levels">
+    <title>Risk radar — D+ status</title>
+    <desc>Six risk items plotted on a radar: OTE Tech, SDP Tech, OTE Business, UI/UX Concepts at Low risk; OPP Tech and Platforms Readiness at Medium risk.</desc>
+    <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="5" markerHeight="5" orient="auto-start-reverse">
+        <path d="M2 1L8 5L2 9" fill="none" stroke="context-stroke" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </marker>
+    </defs>
+
+    <!-- Background rings: High / Medium / Low -->
+    <!-- High ring -->
+    <circle cx="280" cy="265" r="195" fill="#3d0a22" stroke="#ff00aa" stroke-width="0.5" opacity="0.5"/>
+    <!-- Medium ring -->
+    <circle cx="280" cy="265" r="130" fill="#2d0a1a" stroke="#ff00aa" stroke-width="0.5" opacity="0.7"/>
+    <!-- Low ring -->
+    <circle cx="280" cy="265" r="65" fill="#1f0812" stroke="#ff00aa" stroke-width="0.5" opacity="0.9"/>
+
+    <!-- Spoke lines (6 axes, 60° apart) -->
+    <!-- 0°: top -->
+    <line x1="280" y1="265" x2="280" y2="70" stroke="#ff00aa" stroke-width="0.5" opacity="0.4"/>
+    <!-- 60°: top-right -->
+    <line x1="280" y1="265" x2="449" y2="165" stroke="#ff00aa" stroke-width="0.5" opacity="0.4"/>
+    <!-- 120°: bottom-right -->
+    <line x1="280" y1="265" x2="449" y2="365" stroke="#ff00aa" stroke-width="0.5" opacity="0.4"/>
+    <!-- 180°: bottom -->
+    <line x1="280" y1="265" x2="280" y2="460" stroke="#ff00aa" stroke-width="0.5" opacity="0.4"/>
+    <!-- 240°: bottom-left -->
+    <line x1="280" y1="265" x2="111" y2="365" stroke="#ff00aa" stroke-width="0.5" opacity="0.4"/>
+    <!-- 300°: top-left -->
+    <line x1="280" y1="265" x2="111" y2="165" stroke="#ff00aa" stroke-width="0.5" opacity="0.4"/>
+
+    <!-- Ring labels -->
+    <text x="285" y="208" font-size="10" fill="#ff00aa" opacity="0.5" font-family="var(--font-sans)">Low</text>
+    <text x="285" y="143" font-size="10" fill="#ff00aa" opacity="0.5" font-family="var(--font-sans)">Medium</text>
+    <text x="285" y="78" font-size="10" fill="#ff00aa" opacity="0.5" font-family="var(--font-sans)">High</text>
+
+    <!-- DATA POLYGON -->
+    <!-- 6 items, risk mapped: Low = r65, Medium = r130, High = r195 -->
+    <!-- 1. OTE Tech Readiness      top (270°)     Low   → (280, 265-65)   = (280, 200) -->
+    <!-- 2. OPP Tech Readiness      top-right(330°) Med  → (280+130*sin30, 265-130*cos30) = (280+65, 265-112.6) = (345, 152) -->
+    <!-- 3. SDP Tech Readiness      bot-right(30°) Low  → (280+65*sin60, 265+65*cos60)  wait, angles from top going clockwise -->
+
+    <!-- Angles clockwise from top:
+         Item 1: 0°   → top          (280, 265-r)
+         Item 2: 60°  → top-right    (280+r*sin60, 265-r*cos60)
+         Item 3: 120° → bottom-right (280+r*sin120, 265-r*cos120) = (280+r*sin60, 265+r*cos60)
+         Item 4: 180° → bottom       (280, 265+r)
+         Item 5: 240° → bottom-left  (280-r*sin60, 265+r*cos60)
+         Item 6: 300° → top-left     (280-r*sin60, 265-r*cos60)
+
+         sin60 = 0.866, cos60 = 0.5
+
+         Low r=65:   offset_diag = 65*0.866=56.3, 65*0.5=32.5
+         Medium r=130: offset_diag = 130*0.866=112.6, 130*0.5=65
+
+         1. OTE Tech (Low, 0°):      (280, 200)
+         2. OPP Tech (Med, 60°):     (280+112.6, 265-65) = (392.6, 200)
+         3. SDP Tech (Low, 120°):    (280+56.3, 265+32.5) = (336.3, 297.5)
+         4. Platforms (Med, 180°):   (280, 265+130) = (280, 395)
+         5. OTE Business (Low, 240°):(280-56.3, 265+32.5) = (223.7, 297.5)
+         6. UI/UX (Low, 300°):       (280-56.3, 265-32.5) = (223.7, 232.5)
+    -->
+
+    <!-- Shaded polygon fill -->
+    <polygon
+      points="280,200 392.6,200 336.3,297.5 280,395 223.7,297.5 223.7,232.5"
+      fill="#ff00aa"
+      fill-opacity="0.15"
+      stroke="#ff00aa"
+      stroke-width="1.5"
+      stroke-linejoin="round"
+    />
+
+    <!-- Data points -->
+    <!-- 1. OTE Tech (Low) -->
+    <circle cx="280" cy="200" r="7" fill="#ff00aa" opacity="0.9"/>
+    <!-- 2. OPP Tech (Medium) -->
+    <circle cx="392.6" cy="200" r="7" fill="#ff6ec7" opacity="0.9"/>
+    <!-- 3. SDP Tech (Low) -->
+    <circle cx="336.3" cy="297.5" r="7" fill="#ff00aa" opacity="0.9"/>
+    <!-- 4. Platforms Readiness (Medium) -->
+    <circle cx="280" cy="395" r="7" fill="#ff6ec7" opacity="0.9"/>
+    <!-- 5. OTE Business (Low) -->
+    <circle cx="223.7" cy="297.5" r="7" fill="#ff00aa" opacity="0.9"/>
+    <!-- 6. UI/UX (Low) -->
+    <circle cx="223.7" cy="232.5" r="7" fill="#ff00aa" opacity="0.9"/>
+
+    <!-- Labels -->
+    <!-- 1. OTE Tech — top, center -->
+    <text x="280" y="186" text-anchor="middle" font-size="12" font-weight="500" fill="#ffffff" font-family="var(--font-sans)">OTE Tech Readiness</text>
+    <text x="280" y="170" text-anchor="middle" font-size="11" fill="#ff00aa" font-family="var(--font-sans)">Low</text>
+
+    <!-- 2. OPP Tech — top-right -->
+    <text x="404" y="192" text-anchor="start" font-size="12" font-weight="500" fill="#ffffff" font-family="var(--font-sans)">OPP Tech Readiness</text>
+    <text x="404" y="206" text-anchor="start" font-size="11" fill="#ff6ec7" font-family="var(--font-sans)">Medium</text>
+
+    <!-- 3. SDP Tech — bottom-right -->
+    <text x="348" y="296" text-anchor="start" font-size="12" font-weight="500" fill="#ffffff" font-family="var(--font-sans)">SDP Tech Readiness</text>
+    <text x="348" y="310" text-anchor="start" font-size="11" fill="#ff00aa" font-family="var(--font-sans)">Low</text>
+
+    <!-- 4. Platforms — bottom -->
+    <text x="280" y="420" text-anchor="middle" font-size="12" font-weight="500" fill="#ffffff" font-family="var(--font-sans)">Platforms Readiness for SIT</text>
+    <text x="280" y="435" text-anchor="middle" font-size="11" fill="#ff6ec7" font-family="var(--font-sans)">Medium</text>
+
+    <!-- 5. OTE Business — bottom-left -->
+    <text x="210" y="296" text-anchor="end" font-size="12" font-weight="500" fill="#ffffff" font-family="var(--font-sans)">OTE Business Readiness</text>
+    <text x="210" y="310" text-anchor="end" font-size="11" fill="#ff00aa" font-family="var(--font-sans)">Low</text>
+
+    <!-- 6. UI/UX — top-left -->
+    <text x="210" y="231" text-anchor="end" font-size="12" font-weight="500" fill="#ffffff" font-family="var(--font-sans)">UI/UX Concepts Readiness</text>
+    <text x="210" y="245" text-anchor="end" font-size="11" fill="#ff00aa" font-family="var(--font-sans)">Low</text>
+  </svg>
+
+  <!-- Legend -->
+  <div style="display:flex;gap:24px;justify-content:center;margin-top:8px;">
+    <div class="legend-row">
+      <div class="legend-dot" style="background:#ff00aa;"></div>
+      <span style="font-size:12px;color:#ff00aa;">Low risk</span>
+    </div>
+    <div class="legend-row">
+      <div class="legend-dot" style="background:#ff6ec7;"></div>
+      <span style="font-size:12px;color:#ff6ec7;">Medium risk</span>
+    </div>
+    <div class="legend-row">
+      <div class="legend-dot" style="background:#cc0066;opacity:0.5;"></div>
+      <span style="font-size:12px;color:#cc6699;">High risk (none)</span>
+    </div>
+  </div>
+</div>
